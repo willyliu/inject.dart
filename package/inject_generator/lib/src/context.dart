@@ -103,7 +103,11 @@ class BuilderLogger {
     // <TRANSITIONAL_API>
     ElementDeclarationResult elementDeclaration;
     if (element.kind != ElementKind.DYNAMIC) {
-      var parsedLibrary = ParsedLibraryResultImpl.tmp(element.library);
+      // Fixes code generation by changing to use getParsedLibraryByElement
+      // Ref: https://stackoverflow.com/questions/58488093/inject-dart-failed-to-snapshot-build-script-dart-tool-build-entrypoint-build-da
+      // var parsedLibrary = ParsedLibraryResultImpl.tmp(element.library);
+      var parsedLibrary =
+          element.library.session.getParsedLibraryByElement(element.library);
       if (parsedLibrary.state == ResultState.VALID) {
         elementDeclaration = parsedLibrary.getElementDeclaration(element);
       }
